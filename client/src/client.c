@@ -53,7 +53,7 @@ int main(void)
 	conexion = crear_conexion(ip, puerto);
 
 	// Enviamos al servidor el valor de CLAVE como mensaje
-
+	
 	// Armamos y enviamos el paquete
 	paquete(conexion);
 

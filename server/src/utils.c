@@ -1,11 +1,19 @@
 #include"utils.h"
+#include <commons/error.h>
+#include <netdb.h>
+
+
+
+// ... el resto de tu código
+
 
 t_log* logger;
 
 int iniciar_servidor(void)
 {
+	int err=NULL;
 	// Quitar esta línea cuando hayamos terminado de implementar la funcion
-	assert(!"no implementado!");
+	//assert(!"no implementado!");
 
 	int socket_servidor;
 
@@ -19,9 +27,23 @@ int iniciar_servidor(void)
 	getaddrinfo(NULL, PUERTO, &hints, &servinfo);
 
 	// Creamos el socket de escucha del servidor
-
+	int socket_servidor = socket(server_info->ai_family,
+                         server_info->ai_socktype,
+                         server_info->ai_protocol);
 	// Asociamos el socket a un puerto
 
+	err = setsockopt(socket_servidor, SOL_SOCKET, SO_REUSEPORT, &(int){1}, sizeof(int)); //para no tener que esperar 30seg para reconectar
+	if(err==-1)
+	{error_show("No se pudo setear la reutilizacion del puerto");
+    abort();}
+	err = bind(socket_servidor, server_info->ai_addr, server_info->ai_addrlen); //ASigna el socket a un puerto.
+	if(err==-1)
+	{error_show("No se pudo bindear el puerto");
+    abort();}
+	err = listen(socket_servidor, SOMAXCONN);//designa como socket de escucha.
+	if(err==-1)
+	{error_show("No se pudo designar como fd de escucha");
+    abort();}
 	// Escuchamos las conexiones entrantes
 
 	freeaddrinfo(servinfo);
@@ -33,10 +55,11 @@ int iniciar_servidor(void)
 int esperar_cliente(int socket_servidor)
 {
 	// Quitar esta línea cuando hayamos terminado de implementar la funcion
-	assert(!"no implementado!");
+	//assert(!"no implementado!");
 
 	// Aceptamos un nuevo cliente
-	int socket_cliente;
+	
+	int socket_cliente=accept(socket_servidor,NULL,NULL);
 	log_info(logger, "Se conecto un cliente!");
 
 	return socket_cliente;
