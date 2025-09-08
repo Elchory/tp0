@@ -1,13 +1,22 @@
-#include"utils.h"
+#define _POSIX_C_SOURCE 200809L
+#include "utils.h"
 #include <commons/error.h>
 #include <netdb.h>
-
-
-
+#include <sys/socket.h>
+#include <commons/log.h>
+#include<commons/config.h>
 // ... el resto de tu código
 
+t_log* iniciar_logger(void)
+{
+	t_log* nuevo_logger = log_create ("Cliente.log" , "CLient_log" , true , LOG_LEVEL_INFO);
 
-t_log* logger;
+	if (nuevo_logger == NULL) {
+    abort();
+}
+
+	return nuevo_logger;
+}
 
 int iniciar_servidor(void)
 {
@@ -27,16 +36,16 @@ int iniciar_servidor(void)
 	getaddrinfo(NULL, PUERTO, &hints, &servinfo);
 
 	// Creamos el socket de escucha del servidor
-	int socket_servidor = socket(server_info->ai_family,
-                         server_info->ai_socktype,
-                         server_info->ai_protocol);
+	int socket_servidor = socket(servinfo->ai_family,
+                         servinfo->ai_socktype,
+                         servinfo->ai_protocol);
 	// Asociamos el socket a un puerto
 
-	err = setsockopt(socket_servidor, SOL_SOCKET, SO_REUSEPORT, &(int){1}, sizeof(int)); //para no tener que esperar 30seg para reconectar
+	err = setsockopt(socket_servidor, SOL_SOCKET, SO_REUSEADDR, &(int){1}, sizeof(int)); //para no tener que esperar 30seg para reconectar
 	if(err==-1)
 	{error_show("No se pudo setear la reutilizacion del puerto");
     abort();}
-	err = bind(socket_servidor, server_info->ai_addr, server_info->ai_addrlen); //ASigna el socket a un puerto.
+	err = bind(socket_servidor, servinfo->ai_addr, servinfo->ai_addrlen); //ASigna el socket a un puerto.
 	if(err==-1)
 	{error_show("No se pudo bindear el puerto");
     abort();}

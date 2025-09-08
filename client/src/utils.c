@@ -1,7 +1,9 @@
+#define _POSIX_C_SOURCE 200809L
 #include "utils.h"
 #include <netdb.h>
-
-
+#include <sys/socket.h>
+#include<commons/log.h>
+#include<commons/config.h>
 void* serializar_paquete(t_paquete* paquete, int bytes)
 {
 	void * magic = malloc(bytes);

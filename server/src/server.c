@@ -1,7 +1,10 @@
 #include "server.h"
 
 int main(void) {
-	logger = log_create("log.log", "Servidor", 1, LOG_LEVEL_DEBUG);
+	
+	t_log* logger;
+	logger = iniciar_logger();
+	
 
 	int server_fd = iniciar_servidor();
 	log_info(logger, "Servidor listo para recibir al cliente");
