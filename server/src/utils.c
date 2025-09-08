@@ -15,9 +15,7 @@ int iniciar_servidor(void)
 	// Quitar esta línea cuando hayamos terminado de implementar la funcion
 	//assert(!"no implementado!");
 
-	int socket_servidor;
-
-	struct addrinfo hints, *servinfo, *p;
+	struct addrinfo hints, *servinfo;
 
 	memset(&hints, 0, sizeof(hints));
 	hints.ai_family = AF_INET;
@@ -62,6 +60,12 @@ int esperar_cliente(int socket_servidor)
 	int socket_cliente=accept(socket_servidor,NULL,NULL);
 	log_info(logger, "Se conecto un cliente!");
 
+	if(socket_cliente==-1)
+	{
+		log_info(logger, "Error al aceptar la coneccion del cliente en el servidor");
+		abort();
+	}
+	
 	return socket_cliente;
 }
 
