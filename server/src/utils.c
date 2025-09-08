@@ -4,19 +4,10 @@
 #include <netdb.h>
 #include <sys/socket.h>
 #include <commons/log.h>
-#include<commons/config.h>
+#include <commons/config.h>
+
 // ... el resto de tu código
-
-t_log* iniciar_logger(void)
-{
-	t_log* nuevo_logger = log_create ("Cliente.log" , "CLient_log" , true , LOG_LEVEL_INFO);
-
-	if (nuevo_logger == NULL) {
-    abort();
-}
-
-	return nuevo_logger;
-}
+t_log* logger;
 
 int iniciar_servidor(void)
 {
